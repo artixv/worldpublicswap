@@ -23,7 +23,6 @@ contract worldPublicSwapVaults{
     address public slc;
     address public lpManager;
     address public factory;
-    address public core;
     address public setter;
     address newsetter;
     mapping (address=>bool) public xInterface;
@@ -56,18 +55,13 @@ contract worldPublicSwapVaults{
         require(msg.sender == setter, 'World Swap Vaults: Only Lp setter Use');
         _;
     }
-    modifier onlyCoreAddress() {
-        require(core == msg.sender, 'World Swap Vaults: Permission FORBIDDEN');
-        _;
-    }
-    
 
     //-------------------------- constructor --------------------------
     constructor() {
         setter = msg.sender;
     }
     //----------------------------- event -----------------------------
-    event SystemSetup(address _slc,address _lpManager,address _factory,address _core);
+    event SystemSetup(address _slc,address _lpManager,address _factory);
     event Interfacesetting(address _xInterface, bool _ToF);
     event TransferLpSetter(address _set);
     event AcceptLpSetter(bool _TorF);
@@ -83,12 +77,11 @@ contract worldPublicSwapVaults{
     event worldPublicExchange(address indexed inputToken, address indexed outputToken,uint inputAmount,uint outputAmount);
     //----------------------------- ----- -----------------------------
 
-    function systemSetup(address _slc,address _lpManager,address _factory,address _core) external onlyLpSetter{
+    function systemSetup(address _slc,address _lpManager,address _factory) external onlyLpSetter{
             slc = _slc;
             lpManager = _lpManager;
             factory = _factory;
-            core = _core;
-        emit SystemSetup(_slc, _lpManager, _factory, _core);
+        emit SystemSetup(_slc, _lpManager, _factory);
     }
 
     function xInterfacesetting(address _xInterface, bool _ToF)external onlyLpSetter{
@@ -348,7 +341,6 @@ contract worldPublicSwapVaults{
         uint outputAmount;
         uint plusAmount;
         uint tempAmount;
-        // address _lp;
         inputAmount = IERC20(_exVaults.tokens[0]).balanceOf(address(this));
         outputAmount = IERC20(_exVaults.tokens[1]).balanceOf(address(this));
         plusAmount = inputAmount * outputAmount;

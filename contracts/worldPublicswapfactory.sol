@@ -34,8 +34,7 @@ contract worldPublicSwapFactory  {
     event RewardTypeSetup(address indexed factoryAddr, uint newType);
     event Settings( address _vault,
                     address _slc,
-                    address _lpManager,
-                    address _rewardContract);
+                    address _lpManager);
     event SetPA(address newPermissionAddress);
     event AcceptPA(bool _TorF);
     event Resetuplp(address _lp,address _vaults,address _lpManager);
@@ -107,16 +106,14 @@ contract worldPublicSwapFactory  {
 
     function settings(address _vault,
                       address _slc,
-                      address _lpManager,
-                      address _rewardContract) external onlyPermissionAddress{
+                      address _lpManager) external onlyPermissionAddress{
         vaults = _vault;
         slc = _slc;
         lpManager = _lpManager;
         // rewardContract = _rewardContract;
         emit Settings( _vault,
                        _slc,
-                       _lpManager,
-                       _rewardContract);
+                       _lpManager);
     }
 
     function setPA(address _setPermissionAddress) external onlyPermissionAddress{
