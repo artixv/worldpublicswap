@@ -197,8 +197,8 @@ contract worldPublicSwapVaults{
         _amount[0] = reserve[0] * _amountLp /totalSupply;
         _amount[1] = reserve[1] * _amountLp /totalSupply;
         
-        IERC20(assetAddr[0]).safeTransferFrom(address(this),msg.sender,_amount[0]);
-        IERC20(assetAddr[1]).safeTransferFrom(address(this),msg.sender,_amount[1]);
+        IERC20(assetAddr[0]).safeTransfer(msg.sender,_amount[0]);
+        IERC20(assetAddr[1]).safeTransfer(msg.sender,_amount[1]);
 
         // here need add info change
         dereaseLpAmount(_lp, _amount,_amountLp);
@@ -315,7 +315,7 @@ contract worldPublicSwapVaults{
     function getLpPrice(address _lp) public view returns (uint price){
         require(_lp!=address(0),"World Swap Vaults: cant be 0 address");
         if(reserves[_lp].priceCumulative[1] == 0){
-            price = 0;
+            price = 1 ether;
         }else{
             price = reserves[_lp].priceCumulative[0]* 1 ether/reserves[_lp].priceCumulative[1];
         }
@@ -341,13 +341,25 @@ contract worldPublicSwapVaults{
         uint outputAmount;
         uint plusAmount;
         uint tempAmount;
+        uint tempAmount0;
+        uint tempAmount1;
         inputAmount = IERC20(_exVaults.tokens[0]).balanceOf(address(this));
         outputAmount = IERC20(_exVaults.tokens[1]).balanceOf(address(this));
-        plusAmount = inputAmount * outputAmount;
+        
         IERC20(_exVaults.tokens[0]).safeTransferFrom(msg.sender,address(this),_exVaults.amountIn);
-        tempAmount = IERC20(_exVaults.tokens[0]).balanceOf(address(this));
+        tempAmount = IERC20(_exVaults.tokens[0]).balanceOf(address(this)) - inputAmount;
 
-        outputAmount = (outputAmount - plusAmount / tempAmount) * 99 / 100;
+        tempAmount0 = inputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[0]]);
+        tempAmount1 = outputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[1]]);
+        if(tempAmount0 > tempAmount1){
+            inputAmount = inputAmount * tempAmount1 / tempAmount0;
+        }else{
+            outputAmount = outputAmount * tempAmount0 / tempAmount1;
+        }
+
+        plusAmount = inputAmount * outputAmount;
+
+        outputAmount = (outputAmount - plusAmount / (tempAmount + inputAmount)) * 99 / 100;
 
         IERC20(_exVaults.tokens[1]).safeTransfer(msg.sender,outputAmount);
         tempAmount = IERC20(_exVaults.tokens[0]).balanceOf(address(this)) * IERC20(_exVaults.tokens[1]).balanceOf(address(this));
