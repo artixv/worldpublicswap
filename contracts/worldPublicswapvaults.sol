@@ -314,10 +314,12 @@ contract worldPublicSwapVaults{
 
     function getLpPrice(address _lp) public view returns (uint price){
         require(_lp!=address(0),"World Swap Vaults: cant be 0 address");
-        if(reserves[_lp].priceCumulative[1] == 0){
+
+        (uint[2] memory reserve, , ) = getLpReserve(_lp);
+        if(reserve[1] == 0){
             price = 1 ether;
         }else{
-            price = reserves[_lp].priceCumulative[0]* 1 ether/reserves[_lp].priceCumulative[1];
+            price = reserve[0] * 1 ether / reserve[1];
         }
     }
     function getLpPair(address _lp) public view returns (address[2] memory){
@@ -352,12 +354,12 @@ contract worldPublicSwapVaults{
         if(_exVaults.tokens[0] == slc){
             tempAmount0 = inputAmount;
         }else{
-            tempAmount0 = inputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[0]]);
+            tempAmount0 = inputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[0]]) / 1 ether;
         }
         if(_exVaults.tokens[1] == slc){
             tempAmount1 = outputAmount;
         }else{
-            tempAmount1 = outputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[1]]);
+            tempAmount1 = outputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[1]]) / 1 ether;
         }
         
         if(tempAmount0 > tempAmount1){
