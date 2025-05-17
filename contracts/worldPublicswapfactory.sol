@@ -10,8 +10,8 @@ contract worldPublicSwapFactory  {
     //----------------------Persistent Variables ----------------------
     address public setPermissionAddress;
     address newPermissionAddress;
-    address public vaults;//All states are stored in the vault
-    address public slc;// Super Libra Coin
+    address public vaults; // All states are stored in the vault
+    address public slc; // Super Libra Coin
     address public lpManager;
 
     mapping(address => mapping(address => address)) public getPair;
