@@ -319,7 +319,7 @@ contract worldPublicSwapVaults{
         if(reserve[1] == 0){
             price = 1 ether;
         }else{
-            price = reserve[0] * 1 ether / reserve[1];
+            price = reserve[1] * 1 ether / reserve[0];
         }
     }
     function getLpPair(address _lp) public view returns (address[2] memory){
