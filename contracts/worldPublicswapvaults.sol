@@ -349,8 +349,17 @@ contract worldPublicSwapVaults{
         IERC20(_exVaults.tokens[0]).safeTransferFrom(msg.sender,address(this),_exVaults.amountIn);
         tempAmount = IERC20(_exVaults.tokens[0]).balanceOf(address(this)) - inputAmount;
 
-        tempAmount0 = inputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[0]]);
-        tempAmount1 = outputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[1]]);
+        if(_exVaults.tokens[0] == slc){
+            tempAmount0 = inputAmount;
+        }else{
+            tempAmount0 = inputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[0]]);
+        }
+        if(_exVaults.tokens[1] == slc){
+            tempAmount1 = outputAmount;
+        }else{
+            tempAmount1 = outputAmount * getLpPrice(getCoinToStableLpPair[_exVaults.tokens[1]]);
+        }
+        
         if(tempAmount0 > tempAmount1){
             inputAmount = inputAmount * tempAmount1 / tempAmount0;
         }else{
