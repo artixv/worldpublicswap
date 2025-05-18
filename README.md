@@ -38,5 +38,6 @@
 
 ## Reference
 
-- GitHub: https://github.com/OpenZeppelin/openzeppelin-contracts
-- Documentation: https://docs.openzeppelin.com/contracts
+- https://github.com/OpenZeppelin/openzeppelin-contracts
+- https://docs.openzeppelin.com/contracts
+- https://github.com/artixv/xdex/tree/main/whitepaper
