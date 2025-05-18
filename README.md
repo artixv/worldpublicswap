@@ -34,6 +34,7 @@
 
         https://evmtestnet.confluxscan.org/address/0xd2a4a0b69b4ecb1926750ba6d170b907f2dcbeb8?tab=contract-viewer
 
+    对前端的进一步了解请前往前端的github链接
 
 ## Reference
 
